@@ -58,6 +58,12 @@ if data is None or data.empty:
     st.error("Tidak dapat mengunduh data saham. Periksa koneksi internet Anda.")
     st.stop()
 
+# Periksa dan tangani MultiIndex columns jika ada
+if isinstance(data.columns, pd.MultiIndex):
+    # Flatten kolom multi-index menjadi kolom tunggal
+    data.columns = [col[0] for col in data.columns]
+    st.info("Data dengan struktur kolom multi-level telah dikonversi untuk visualisasi.")
+
 # Menampilkan data historis
 st.subheader("Data Historis Harga Saham Microsoft")
 col1, col2 = st.columns([3, 1])
