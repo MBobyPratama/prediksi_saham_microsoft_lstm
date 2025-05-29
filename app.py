@@ -103,7 +103,5 @@ st.sidebar.info(
     - Pandas
     - yfinance
     - Plotly
-    
-    © 2025 Prediksi Saham Microsoft LSTM
     """
 )
