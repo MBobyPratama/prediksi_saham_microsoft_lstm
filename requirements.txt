@@ -1,9 +1,5 @@
 numpy
 pandas
 yfinance
-scikit-learn
-matplotlib
 plotly
 streamlit
-joblib
-pillow

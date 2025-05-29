@@ -2,31 +2,30 @@ import streamlit as st
 import yfinance as yf
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import os
 from datetime import datetime, timedelta
 import plotly.graph_objects as go
 import plotly.express as px
-from PIL import Image
+import os
 
 # Konfigurasi halaman
 st.set_page_config(
-    page_title="Prediksi Harga Saham Microsoft",
+    page_title="Prediksi Saham Microsoft - Demo",
     page_icon="📈",
     layout="wide"
 )
 
 # Konstanta
 TICKER = 'MSFT'
-SEQUENCE_LENGTH = 60  # Sesuai dengan yang digunakan pada model training
 
 # Header aplikasi
 st.title("📈 Prediksi Harga Saham Microsoft (MSFT)")
 st.markdown("""
-Aplikasi ini menggunakan model LSTM (Long Short-Term Memory) untuk memprediksi harga saham Microsoft (MSFT).
-Model telah dilatih menggunakan data historis dari Yahoo Finance.
+Aplikasi ini menggunakan model LSTM (Long Short-Term Memory) untuk memprediksi harga saham Microsoft.
 
-**CATATAN: Ini adalah versi demo dari aplikasi. Untuk versi lengkap dengan prediksi real-time, aplikasi perlu dijalankan di lingkungan lokal.**
+**CATATAN PENTING:** Ini adalah versi demo. Untuk akses ke prediksi penuh:
+1. Clone repository dari GitHub
+2. Jalankan `train_model.py` untuk melatih model
+3. Jalankan `streamlit run app.py` di lingkungan lokal
 """)
 
 # Sidebar untuk parameter
@@ -59,6 +58,12 @@ if data is None or data.empty:
     st.error("Tidak dapat mengunduh data saham. Periksa koneksi internet Anda.")
     st.stop()
 
+# Periksa dan tangani MultiIndex columns jika ada
+if isinstance(data.columns, pd.MultiIndex):
+    # Flatten kolom multi-index menjadi kolom tunggal
+    data.columns = [col[0] for col in data.columns]
+    st.info("Data dengan struktur kolom multi-level telah dikonversi untuk visualisasi.")
+
 # Menampilkan data historis
 st.subheader("Data Historis Harga Saham Microsoft")
 col1, col2 = st.columns([3, 1])
@@ -74,9 +79,9 @@ with col2:
     st.caption("10 data terakhir")
 
 # Informasi tambahan
-st.subheader("Tentang Model")
+st.subheader("Tentang Model LSTM")
 st.markdown("""
-Model LSTM (Long Short-Term Memory) digunakan untuk prediksi ini dengan konfigurasi:
+Model LSTM (Long Short-Term Memory) digunakan untuk prediksi dengan konfigurasi:
 - Sequence Length: 60 hari
 - 3 layer LSTM Bidirectional
 - Dropout layers untuk menghindari overfitting
@@ -84,7 +89,6 @@ Model LSTM (Long Short-Term Memory) digunakan untuk prediksi ini dengan konfigur
 
 **Catatan Penting:**
 - Prediksi pasar saham memiliki ketidakpastian tinggi dan dipengaruhi banyak faktor
-- Harap gunakan prediksi ini sebagai salah satu referensi saja, bukan keputusan investasi utama
 - Model hanya mempertimbangkan data historis harga, bukan berita atau fundamental
 """)
 
@@ -99,7 +103,5 @@ st.sidebar.info(
     - Pandas
     - yfinance
     - Plotly
-    
-    Untuk mengakses versi lengkap dengan prediksi, jalankan aplikasi di lingkungan lokal.
     """
 )
